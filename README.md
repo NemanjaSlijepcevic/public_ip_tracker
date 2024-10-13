@@ -29,6 +29,7 @@ The application relies on the following environment variables:
 | `API_IP_TOKEN`       | Bearer token for accessing the `/current_ip` API (required). |
 | `IP_FILE_NAME`       | Name of the file storing the current IP (default: `current_ip.txt`). |
 | `LOG_LEVEL`          | Logging level (default: `INFO`). |
+| `CHECK_FREQUENCY`    | Task execution frequency in sedonds (default: `60`). |
 
 
 ## Installation
