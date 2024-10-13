@@ -1,0 +1,55 @@
+name: Deploy on tag creation
+
+on:
+  push:
+    tags:
+      - 'v*'
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python for tests
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies and run tests
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-mock flake8
+          
+      - name: Lint with flake8
+        run: flake8 --statistics
+
+      - name: Unit testing with pytest
+        run: pytest --maxfail=0 --disable-warnings
+
+      - name: Generate a report       
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: python-report
+          path: python-report/
+          retention-days: 7
+          
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build Docker image
+      run: docker build -t ghcr.io/${{ github.repository_owner }}/public_ip_tracker:latest .
+
+    - name: Login to GitHub Container Registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Push Docker image to GHCR
+      run: docker push ghcr.io/${{ github.repository_owner }}/public_ip_tracker:latest
+          
