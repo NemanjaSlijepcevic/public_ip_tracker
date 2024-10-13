@@ -7,6 +7,7 @@ from ip_checker import check_ip
 from routes import setup_routes
 
 
+frequency = os.getenv('CHECK_FREQUENCY', '60')
 log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
 logging.basicConfig(
     level=log_level,
@@ -27,7 +28,7 @@ def periodic_task():
                 check_ip()
             except Exception:
                 logger.exception("Error occurred in periodic task")
-            time.sleep(60)
+            time.sleep(frequency)
 
     task_thread = threading.Thread(target=task)
     task_thread.daemon = True
