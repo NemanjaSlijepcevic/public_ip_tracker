@@ -13,14 +13,17 @@ CURRENT_IP = ''
 logger = logging.getLogger(__name__)
 
 
-# Check for necessary environment variables
-if not BOT_TOKEN:
-    logger.error("BOT_TOKEN is not set.")
-    exit(1)
+def check_bot_inputs():
+    # Check for necessary environment variables
+    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+    CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+    if not BOT_TOKEN:
+        logger.error("BOT_TOKEN is not set.")
+        exit(1)
 
-if not CHAT_ID:
-    logger.error("CHAT_ID is not set.")
-    exit(1)
+    if not CHAT_ID:
+        logger.error("CHAT_ID is not set.")
+        exit(1)
 
 
 def get_public_ip():

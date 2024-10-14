@@ -3,8 +3,8 @@ import logging
 import os
 import threading
 import time
-from ip_checker import check_ip
-from routes import setup_routes
+from ip_checker import check_ip, check_bot_inputs
+from routes import setup_routes, check_api_input
 
 
 frequency = int(os.getenv('CHECK_FREQUENCY', '60'))
@@ -27,6 +27,8 @@ if not isinstance(frequency, int) and frequency <= 1:
     exit(1)
 
 
+check_bot_inputs()
+check_api_input
 app = Flask(__name__)
 setup_routes(app)
 
