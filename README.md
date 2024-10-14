@@ -89,7 +89,82 @@ Response:
 
 ## Docker
 
-You can run the application in a Docker container using the provided `Dockerfile`. Follow these steps to build and run the application.
+You can run the application in a Docker container using the provided `Dockerfile`. The latest Docker image for this application is available at **`ghcr.io/nemanjaslijepcevic/public_ip_tracker:latest`**.
+
+### Using Pre-Built Docker Image
+
+1. **Pull the latest image** from GitHub Container Registry (GHCR):
+
+   ~~~bash
+   docker pull ghcr.io/nemanjaslijepcevic/public_ip_tracker:latest
+   ~~~
+
+2. **Run the Docker container**:
+
+   ~~~bash
+   docker run -d \
+     --name public_ip_tracker \
+     -e TELEGRAM_BOT_TOKEN="${TELEGRAM_IP_TOKEN}" \
+     -e TELEGRAM_CHAT_ID="${TELEGRAM_IP_ID}" \
+     -e API_IP_TOKEN="${API_IP_TOKEN}" \
+     -e IP_FILE_NAME="current_ip.txt" \
+     -e TZ="Europe/Belgrade" \
+     -e LOG_LEVEL="DEBUG" \
+     -v ./data/public_ip_tracker/current_ip.txt:/app/current_ip.txt:rw \
+     --restart unless-stopped \
+     public_ip_tracker
+   ~~~
+   This command pulls and runs the container in detached mode (`-d`), mapping port `5000` on your host to port `5000` in the container. The `--env-file .env` flag ensures that the required environment variables are provided to the container.
+
+### Docker Compose
+
+For easier management of Docker containers and environment configuration, you can use **Docker Compose**.
+
+1. Create a `docker-compose.yml` file in the root of your project:
+
+   ~~~yaml
+   version: '3'
+   
+   services:
+     public_ip_tracker:
+       image: ghcr.io/nemanjaslijepcevic/public_ip_tracker:latest
+       container_name: public_ip_tracker
+       environment:
+         TELEGRAM_BOT_TOKEN: "${TELEGRAM_IP_TOKEN}"
+         TELEGRAM_CHAT_ID: "${TELEGRAM_IP_ID}"
+         API_IP_TOKEN: "${API_IP_TOKEN}"
+         IP_FILE_NAME: "current_ip.txt"
+         TZ: "Europe/Belgrade"
+         LOG_LEVEL: "DEBUG"
+       volumes:
+         - /location/to/current_ip.txt:/app/current_ip.txt:rw
+       restart: unless-stopped
+   ~~~
+
+   This configuration does the following:
+   - Builds the Docker image from the current directory.
+   - Exposes the app on port `5000`.
+   - Restarts the container unless it's stopped manually.
+
+2. **Build and run with Docker Compose**:
+
+   Run the following command to build and start the application using Docker Compose:
+
+   ~~~bash
+   docker-compose up --build -d
+   ~~~
+
+   The `--build` flag forces a rebuild of the Docker image, and `-d` runs the containers in detached mode.
+
+3. **Stopping the app**:
+
+   To stop the app when running with Docker Compose:
+
+   ~~~bash
+   docker-compose down
+   ~~~
+
+   This will stop and remove the containers but leave the images intact.
 
 ### Building and Running with Docker
 
@@ -115,69 +190,6 @@ You can run the application in a Docker container using the provided `Dockerfile
 
    After starting the container, the application will be accessible at `http://localhost:5000`.
 
-### Docker Compose
-
-For easier management of Docker containers and environment configuration, you can use **Docker Compose**.
-
-1. Create a `docker-compose.yml` file in the root of your project:
-
-   ~~~yaml
-   version: '3'
-
-   services:
-     app:
-       image: public_ip_tracker
-       build: .
-       ports:
-         - "5000:5000"
-       env_file:
-         - .env
-       restart: unless-stopped
-   ~~~
-
-   This configuration does the following:
-   - Builds the Docker image from the current directory.
-   - Exposes the app on port `5000`.
-   - Loads environment variables from the `.env` file.
-   - Restarts the container unless it's stopped manually.
-
-2. **Build and run with Docker Compose**:
-
-   Run the following command to build and start the application using Docker Compose:
-
-   ~~~bash
-   docker-compose up --build -d
-   ~~~
-
-   The `--build` flag forces a rebuild of the Docker image, and `-d` runs the containers in detached mode.
-
-3. **Stopping the app**:
-
-   To stop the app when running with Docker Compose:
-
-   ~~~bash
-   docker-compose down
-   ~~~
-
-   This will stop and remove the containers but leave the images intact.
-
-### Using Docker Compose for Development
-
-During development, you may want to make changes to your code and rebuild the container. Docker Compose simplifies this process:
-
-1. After making changes, rebuild the container:
-
-   ~~~bash
-   docker-compose up --build -d
-   ~~~
-
-   Docker Compose will automatically rebuild the image and restart the container.
-
-2. To view logs from the running container:
-
-   ~~~bash
-   docker-compose logs -f
-   ~~~
 
 This setup with Docker and Docker Compose makes it easy to deploy, manage, and run the application in a consistent environment.
 
