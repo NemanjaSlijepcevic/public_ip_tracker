@@ -27,14 +27,6 @@ jobs:
 
       - name: Unit testing with pytest
         run: pytest --maxfail=0 --disable-warnings
-
-      - name: Generate a report       
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: python-report
-          path: python-report/
-          retention-days: 7
           
   docker:
     needs: test
@@ -45,7 +37,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Build Docker image
-      run: docker build -t ghcr.io/nemanja_slijepcevic/public_ip_tracker:${{ github.ref }} .
+      run: docker build -t ghcr.io/nemanja_slijepcevic/public_ip_tracker:latest .
 
     - name: Login to GitHub Container Registry
       run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
