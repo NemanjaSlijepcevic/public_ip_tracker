@@ -6,11 +6,23 @@ from routes import check_api_input
 
 class TestInputVariables:
 
-    def test_check_bot_inputs_failed(self, monkeypatch):
+    def test_check_bot_inputs_failed_token(self, monkeypatch):
         monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "")
-        monkeypatch.setenv("TELEGRAM_CHAT_ID", "")
+        monkeypatch.setenv("TELEGRAM_CHAT_ID", "random_chat_id")
 
         assert os.getenv("TELEGRAM_BOT_TOKEN") == ""
+        assert os.getenv("TELEGRAM_CHAT_ID") == "random_chat_id"
+
+        with pytest.raises(SystemExit) as e:
+            check_bot_inputs()
+        assert e.type == SystemExit
+        assert e.value.code == 1
+
+    def test_check_bot_inputs_failed_chat(self, monkeypatch):
+        monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "random_bot_token")
+        monkeypatch.setenv("TELEGRAM_CHAT_ID", "")
+
+        assert os.getenv("TELEGRAM_BOT_TOKEN") == "random_bot_token"
         assert os.getenv("TELEGRAM_CHAT_ID") == ""
 
         with pytest.raises(SystemExit) as e:
@@ -24,13 +36,7 @@ class TestInputVariables:
 
         assert os.getenv("TELEGRAM_BOT_TOKEN") == "random_bot_token"
         assert os.getenv("TELEGRAM_CHAT_ID") == "random_chat_id"
-
-        try:
-            check_bot_inputs()
-        except SystemExit:
-            pytest.fail(
-                "check_bot_inputs() exited unexpectedly with SystemExit"
-            )
+        assert check_bot_inputs(), "check_bot_inputs() exited unexpectedly"
 
     def test_check_api_token_failed(self, monkeypatch):
         monkeypatch.setenv("API_IP_TOKEN", "")
@@ -46,10 +52,4 @@ class TestInputVariables:
         monkeypatch.setenv("API_IP_TOKEN", "random_token")
 
         assert os.getenv("API_IP_TOKEN") == "random_token"
-
-        try:
-            check_api_input()
-        except SystemExit:
-            pytest.fail(
-                "check_bot_inputs() exited unexpectedly with SystemExit"
-            )
+        assert check_api_input(), "check_api_input() exited unexpectedly"

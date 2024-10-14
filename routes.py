@@ -7,11 +7,12 @@ API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
 CURRENT_IP = ''
 
 
-def check_api_input():
+def check_api_input():  # UT fails if this is checked without function
     API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
     if not API_BEARER_TOKEN:
         logger.error("API_BEARER_TOKEN is not set.")
         exit(1)
+    return True  # unit testing check
 
 
 def setup_routes(app):
