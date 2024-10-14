@@ -43,3 +43,24 @@ class TestSendTelegramMessage:
             "HTTP error occurred: 404 Client Error",
             exc_info=True
         )
+
+    def test_invalid_post_request(self, mocker):
+        bot_token = "valid_bot_token"
+        chat_id = "valid_chat_id"
+        message = "Hello, World!"
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+
+        # Mocking requests.post to raise an exception
+        mock_post = mocker.patch('requests.post')
+        mock_post.side_effect = Exception("Some unexpected error")
+
+        # Mocking the logger to check if exception is logged
+        mock_logger = mocker.patch('telegram_bot.logger')
+
+        # Call the function
+        send_telegram_message(bot_token, chat_id, message)
+
+        # Assert that logger.exception was called with the right message
+        mock_logger.exception.assert_called_once_with(
+            f"An unexpected error occurred during POST request to {url}"
+        )

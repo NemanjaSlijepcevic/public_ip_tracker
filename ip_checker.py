@@ -13,8 +13,7 @@ CURRENT_IP = ''
 logger = logging.getLogger(__name__)
 
 
-def check_bot_inputs():
-    # Check for necessary environment variables
+def check_bot_inputs():  # UT fails if this is checked without function
     BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
     CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
     if not BOT_TOKEN:
@@ -24,6 +23,7 @@ def check_bot_inputs():
     if not CHAT_ID:
         logger.error("CHAT_ID is not set.")
         exit(1)
+    return True  # unit testing check
 
 
 def get_public_ip():
@@ -36,7 +36,7 @@ def get_public_ip():
     except Exception:
         logger.exception(
             "An unexpected error occurred during GET request to ipconfig.me"
-            )
+        )
 
 
 def check_ip():
