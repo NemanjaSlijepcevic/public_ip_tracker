@@ -27,4 +27,8 @@ jobs:
         run: flake8 --statistics
 
       - name: Unit testing with pytest
+        env:
+          API_BEARER_TOKEN: random_api_bearer_token
+          BOT_TOKEN: random_bot_token
+          CHAT_ID: random_chat_id
         run: pytest --maxfail=0 --disable-warnings
