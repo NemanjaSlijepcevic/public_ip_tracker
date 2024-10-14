@@ -51,4 +51,4 @@ jobs:
       run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Push Docker image to GHCR
-      run: docker push ghcr.io/${{ github.repository_owner }}/public_ip_tracker:latest
+      run: docker push ghcr.io/nemanja_slijepcevic/public_ip_tracker:latest
