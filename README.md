@@ -109,10 +109,9 @@ You can run the application in a Docker container using the provided `Dockerfile
      -e TELEGRAM_BOT_TOKEN="${TELEGRAM_IP_TOKEN}" \
      -e TELEGRAM_CHAT_ID="${TELEGRAM_IP_ID}" \
      -e API_IP_TOKEN="${API_IP_TOKEN}" \
-     -e IP_FILE_NAME="current_ip.txt" \
      -e TZ="Europe/Belgrade" \
      -e LOG_LEVEL="DEBUG" \
-     -v ./data/public_ip_tracker/current_ip.txt:/app/current_ip.txt:rw \
+     -v /path/to/public_ip_tracker/current_ip.txt:/app/current_ip.txt:rw \
      --restart unless-stopped \
      public_ip_tracker
    ~~~
@@ -135,11 +134,10 @@ For easier management of Docker containers and environment configuration, you ca
          TELEGRAM_BOT_TOKEN: "${TELEGRAM_IP_TOKEN}"
          TELEGRAM_CHAT_ID: "${TELEGRAM_IP_ID}"
          API_IP_TOKEN: "${API_IP_TOKEN}"
-         IP_FILE_NAME: "current_ip.txt"
          TZ: "Europe/Belgrade"
          LOG_LEVEL: "DEBUG"
        volumes:
-         - /location/to/current_ip.txt:/app/current_ip.txt:rw
+         - /path/to/current_ip.txt:/app/current_ip.txt:rw
        restart: unless-stopped
    ~~~
 
