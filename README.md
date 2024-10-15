@@ -1,6 +1,8 @@
 # Public IP Tracking and Notification App
 
-This application tracks your public IP address and notifies you via Telegram if the IP address changes. The app also provides a REST API endpoint to retrieve the current IP address, secured by a bearer token.
+This application tracks your public IP address and notifies you via Telegram if the IP address changes. It also provides a REST API endpoint to retrieve the current IP address, secured by a bearer token.
+
+This setup is particularly useful for machines behind Carrier-Grade NAT (CGNAT), where direct access from the internet is not possible due to shared public IPs. By running a VPN on the machine, you can access the API endpoint securely via the VPN connection, even when the machine is behind CGNAT. This allows you to reliably track and retrieve the public IP address of your machine through the VPN without needing a public-facing IP address.
 
 ## Features
 
