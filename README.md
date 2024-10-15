@@ -39,7 +39,7 @@ The application relies on the following environment variables:
 1. Clone the repository:
 
    ~~~bash
-   git clone https://github.com/yourusername/public_ip_tracker.git
+   git clone https://github.com/nemanjaslijepcevic/public_ip_tracker.git
    cd public_ip_tracker
    ~~~
 
