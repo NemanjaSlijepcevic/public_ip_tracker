@@ -1,46 +1,49 @@
-name: Deploy on tag creation
-
+name: Create and publish a Docker image
 on:
-  push:
-    tags:
-      - 'v*'
-    
+  release:
+    types: [published]
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
-  test:
+  build-and-push-image:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python for tests
-        uses: actions/setup-python@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
         with:
-          python-version: '3.12'
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
 
-      - name: Install dependencies and run tests
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-mock flake8
-          
-      - name: Lint with flake8
-        run: flake8 --statistics
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Unit testing with pytest
-        run: pytest --maxfail=0 --disable-warnings
-          
-  docker:
-    needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Build Docker image
-      run: docker build -t ghcr.io/nemanjaslijepcevic/public_ip_tracker:latest .
-
-    - name: Login to GitHub Container Registry
-      run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-    - name: Push Docker image to GHCR
-      run: docker push ghcr.io/nemanjaslijepcevic/public_ip_tracker:latest
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+      
