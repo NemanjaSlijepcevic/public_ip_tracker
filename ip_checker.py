@@ -44,7 +44,7 @@ def check_ip():
     CURRENT_IP = get_public_ip()
     previous_ip = read_previous_ip(CURRENT_IP_FILE)
 
-    if CURRENT_IP != previous_ip and CURRENT_IP != None:
+    if CURRENT_IP != previous_ip and CURRENT_IP is not None:
         logger.info(f"IP has changed from {previous_ip} to {CURRENT_IP}")
         write_current_ip(CURRENT_IP_FILE, CURRENT_IP)
         message = f"Your IP address has changed to: {CURRENT_IP}"
