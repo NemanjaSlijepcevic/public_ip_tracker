@@ -12,6 +12,9 @@ jobs:
       packages: write
       attestations: write
       id-token: write
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,7 +55,7 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ secrets.DOCKER_NAMESPACE }}/${{ secrets.DOCKER_REPOSITORY }}:${{ steps.meta.outputs.tags }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
       
