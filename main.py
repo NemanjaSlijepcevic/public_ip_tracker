@@ -3,11 +3,11 @@ import logging
 import os
 import threading
 import time
-from ip_checker import check_ip, check_bot_inputs
-from routes import setup_routes, check_api_input
+from config_utils import check_inputs, check_frequency
+from ip_checker import check_ip
+from routes import setup_routes
 
 
-frequency = int(os.getenv('CHECK_FREQUENCY', '60'))
 log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
 logging.basicConfig(
     level=log_level,
@@ -15,22 +15,11 @@ logging.basicConfig(
     handlers=[logging.FileHandler('app.log'), logging.StreamHandler()]
 )
 logger = logging.getLogger(__name__)
-VALID_LOG_LEVELS = {"NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
 
-
-if log_level not in VALID_LOG_LEVELS:
-    print(f"Invalid log level: '{log_level}'.")
-    exit(1)
-
-if not isinstance(frequency, int) and frequency <= 1:
-    logger.error("Incorrect value of frequency")
-    exit(1)
-
-
-check_bot_inputs()
-check_api_input
+check_inputs()
 app = Flask(__name__)
 setup_routes(app)
+frequency = check_frequency()
 
 
 def periodic_task():
