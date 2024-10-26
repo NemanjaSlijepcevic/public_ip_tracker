@@ -1,3 +1,4 @@
+import os
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,3 +22,17 @@ def write_current_ip(filename, ip):
             file.write(ip)
     except Exception:
         logger.exception(f"An error occurred while writing to {filename}")
+
+
+def check_and_create_file(filename):
+    if os.path.exists(filename):
+        logger.debug(f"File '{filename}' already exists.")
+    else:
+        try:
+            with open(filename, 'w'):
+                logger.debug(f"File '{filename}' has been created.")
+        except Exception:
+            logger.exception(
+                f"An unexpected error occurred while creating a file:"
+                f" {filename}"
+            )
