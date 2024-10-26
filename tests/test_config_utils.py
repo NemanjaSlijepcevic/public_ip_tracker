@@ -67,7 +67,7 @@ class TestInputVariables:
         monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "random_api_token")
         monkeypatch.setenv("TELEGRAM_CHAT_ID", "random_chat_id")
         monkeypatch.setenv("CHECK_FREQUENCY", "50")
-        monkeypatch.setenv("API_BEARER_TOKEN", "random_api_token")
+        monkeypatch.setenv("API_IP_TOKEN", "random_api_token")
         monkeypatch.setenv("LOG_LEVEL", "WARNING")
 
         assert check_inputs()
@@ -76,7 +76,7 @@ class TestInputVariables:
         monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "random_api_token")
         monkeypatch.setenv("TELEGRAM_CHAT_ID", "random_chat_id")
         monkeypatch.setenv("CHECK_FREQUENCY", "five")
-        monkeypatch.setenv("API_BEARER_TOKEN", "random_api_token")
+        monkeypatch.setenv("API_IP_TOKEN", "random_api_token")
         monkeypatch.setenv("LOG_LEVEL", "WARNING")
 
         mock_logger = mocker.patch('config_utils.logger')
