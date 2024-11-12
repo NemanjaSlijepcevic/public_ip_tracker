@@ -1,18 +1,10 @@
 import os
 import logging
-from main import CURRENT_IP
+from ip_checker import get_current_ip_value
 from flask import jsonify, request, abort
 
 logger = logging.getLogger(__name__)
 API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
-
-
-def check_api_input():  # UT fails if this is checked without function
-    API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
-    if not API_BEARER_TOKEN:
-        logger.error("API_BEARER_TOKEN is not set.")
-        exit(1)
-    return True  # unit testing check
 
 
 def setup_routes(app):
@@ -20,7 +12,8 @@ def setup_routes(app):
     def show_current_ip():
         auth_header = request.headers.get('Authorization')
         if auth_header and auth_header.split(" ")[1] == API_BEARER_TOKEN:
-            return jsonify({"ip": CURRENT_IP})
+            current_ip = get_current_ip_value()
+            return jsonify({"ip": current_ip})
         else:
             abort(401)  # Unauthorized
 

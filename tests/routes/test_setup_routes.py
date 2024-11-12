@@ -13,8 +13,7 @@ class TestSetupRoutes:
     def test_current_ip_with_valid_authorization(self, mocker):
 
         mocker.patch('routes.API_BEARER_TOKEN', 'valid_token')
-        mocker.patch('routes.CURRENT_IP', '192.168.1.1')
-
+        mocker.patch('routes.get_current_ip_value', return_value="192.168.1.1")
         response = client.get(
             '/current_ip',
             headers={'Authorization': 'Bearer valid_token'}
