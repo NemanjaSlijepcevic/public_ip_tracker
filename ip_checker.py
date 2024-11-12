@@ -28,7 +28,7 @@ def check_bot_inputs():  # UT fails if this is checked without function
 
 def get_public_ip():
     try:
-        response = requests.get('http://ipconfig.me/ip')
+        response = requests.get('https://ifconfig.me/')
         response.raise_for_status()
         return response.text.strip()
     except requests.exceptions.HTTPError as e:
