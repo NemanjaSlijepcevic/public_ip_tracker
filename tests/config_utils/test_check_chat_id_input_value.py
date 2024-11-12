@@ -17,7 +17,7 @@ class TestChatIdInputValues:
         )
 
     def test_check_chat_id_input_value_pass(self, monkeypatch, mocker):
-        monkeypatch.setenv("CHAT_ID", "random_chat_id")
+        monkeypatch.setenv("TELEGRAM_CHAT_ID", "random_chat_id")
 
         result = check_chat_id_input_value()
         assert result, "check_chat_id_input_value() exited unexpectedly"
