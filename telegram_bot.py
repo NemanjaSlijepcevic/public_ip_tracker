@@ -16,4 +16,4 @@ def send_telegram_message(bot_token, chat_id, message):
     except Exception:
         logger.exception(
             f"An unexpected error occurred during POST request to {url}"
-            )
+        )

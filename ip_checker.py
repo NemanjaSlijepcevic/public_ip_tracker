@@ -5,25 +5,12 @@ from file_utils import read_previous_ip, write_current_ip
 from telegram_bot import send_telegram_message
 
 
+CURRENT_IP_FILE = os.getenv('IP_FILE_NAME', 'current_ip.txt')
 BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
-CURRENT_IP_FILE = os.getenv('IP_FILE_NAME', 'current_ip.txt')
 CURRENT_IP = ''
 
 logger = logging.getLogger(__name__)
-
-
-def check_bot_inputs():  # UT fails if this is checked without function
-    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-    CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
-    if not BOT_TOKEN:
-        logger.error("BOT_TOKEN is not set.")
-        exit(1)
-
-    if not CHAT_ID:
-        logger.error("CHAT_ID is not set.")
-        exit(1)
-    return True  # unit testing check
 
 
 def get_public_ip():
@@ -39,15 +26,28 @@ def get_public_ip():
         )
 
 
-def check_ip():
+def get_current_ip_value():
+    if CURRENT_IP == '':
+        new_ip = get_public_ip()
+        set_current_ip_value(new_ip)
+    return CURRENT_IP
+
+
+def set_current_ip_value(current_value):
     global CURRENT_IP
-    CURRENT_IP = get_public_ip()
+    CURRENT_IP = current_value
+    return True
+
+
+def check_ip():
+    new_ip = get_public_ip()
     previous_ip = read_previous_ip(CURRENT_IP_FILE)
 
-    if CURRENT_IP != previous_ip and CURRENT_IP is not None:
-        logger.info(f"IP has changed from {previous_ip} to {CURRENT_IP}")
-        write_current_ip(CURRENT_IP_FILE, CURRENT_IP)
-        message = f"Your IP address has changed to: {CURRENT_IP}"
+    if new_ip != previous_ip and new_ip is not None:
+        set_current_ip_value(new_ip)
+        logger.info(f"IP has changed from {previous_ip} to {new_ip}")
+        write_current_ip(CURRENT_IP_FILE, new_ip)
+        message = f"Your IP address has changed to: {new_ip}"
         send_telegram_message(BOT_TOKEN, CHAT_ID, message)
     else:
         logger.debug("IP address is the same")

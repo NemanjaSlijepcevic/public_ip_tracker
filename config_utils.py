@@ -1,15 +1,36 @@
 import os
 import logging
-from ip_checker import check_bot_inputs
-from routes import check_api_input
-from file_utils import check_and_create_file
 
 
 CURRENT_IP_FILE = os.getenv('IP_FILE_NAME', 'current_ip.txt')
 logger = logging.getLogger(__name__)
 
 
-def check_frequency():
+def check_bot_token_input_value():
+    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+    if not BOT_TOKEN:
+        logger.error("BOT_TOKEN is not set.")
+        exit(1)
+    return True
+
+
+def check_chat_id_input_value():
+    CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+    if not CHAT_ID:
+        logger.error("CHAT_ID is not set.")
+        exit(1)
+    return True
+
+
+def check_api_input_value():
+    API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
+    if not API_BEARER_TOKEN:
+        logger.error("API_BEARER_TOKEN is not set.")
+        exit(1)
+    return True
+
+
+def check_frequency_input_value():
     frequency = os.getenv('CHECK_FREQUENCY', '60')
     try:
         frequency = int(frequency)
@@ -24,7 +45,7 @@ def check_frequency():
     return frequency
 
 
-def check_log_level():
+def check_log_level_input_value():
     VALID_LOG_LEVELS = {
         "NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
     }
@@ -35,10 +56,10 @@ def check_log_level():
     return True
 
 
-def check_inputs():
-    check_bot_inputs()
-    check_api_input()
-    check_and_create_file(CURRENT_IP_FILE)
-    check_frequency()
-    check_log_level()
+def check_input_values():
+    check_bot_token_input_value()
+    check_chat_id_input_value()
+    check_api_input_value()
+    check_frequency_input_value()
+    check_log_level_input_value()
     return True
