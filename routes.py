@@ -1,10 +1,10 @@
 import os
 import logging
+from main import CURRENT_IP
 from flask import jsonify, request, abort
 
 logger = logging.getLogger(__name__)
 API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
-CURRENT_IP = ''
 
 
 def check_api_input():  # UT fails if this is checked without function
