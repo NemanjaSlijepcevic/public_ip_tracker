@@ -6,22 +6,6 @@ CURRENT_IP_FILE = os.getenv('IP_FILE_NAME', 'current_ip.txt')
 logger = logging.getLogger(__name__)
 
 
-def check_bot_token_input_value():
-    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-    if not BOT_TOKEN:
-        logger.error("BOT_TOKEN is not set.")
-        exit(1)
-    return True
-
-
-def check_chat_id_input_value():
-    CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
-    if not CHAT_ID:
-        logger.error("CHAT_ID is not set.")
-        exit(1)
-    return True
-
-
 def check_api_input_value():
     API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
     if not API_BEARER_TOKEN:
@@ -57,8 +41,6 @@ def check_log_level_input_value():
 
 
 def check_input_values():
-    check_bot_token_input_value()
-    check_chat_id_input_value()
     check_api_input_value()
     check_frequency_input_value()
     check_log_level_input_value()

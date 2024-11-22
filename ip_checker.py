@@ -2,12 +2,9 @@ import os
 import logging
 import requests
 from file_utils import read_previous_ip, write_current_ip
-from telegram_bot import send_telegram_message
 
 
 CURRENT_IP_FILE = os.getenv('IP_FILE_NAME', 'current_ip.txt')
-BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 CURRENT_IP = ''
 
 logger = logging.getLogger(__name__)
@@ -47,7 +44,5 @@ def check_ip():
         set_current_ip_value(new_ip)
         logger.info(f"IP has changed from {previous_ip} to {new_ip}")
         write_current_ip(CURRENT_IP_FILE, new_ip)
-        message = f"Your IP address has changed to: {new_ip}"
-        send_telegram_message(BOT_TOKEN, CHAT_ID, message)
     else:
         logger.debug("IP address is the same")

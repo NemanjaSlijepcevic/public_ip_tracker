@@ -8,7 +8,6 @@ class TestGetCheckIp:
         mocker.patch('ip_checker.read_previous_ip', return_value="192.168.1.1")
         mocker.patch('ip_checker.write_current_ip')
 
-        mocker.patch('ip_checker.send_telegram_message')
         mock_logger = mocker.patch('ip_checker.logger')
 
         check_ip()
@@ -23,7 +22,6 @@ class TestGetCheckIp:
         mocker.patch('ip_checker.read_previous_ip', return_value="192.168.1.1")
         mocker.patch('ip_checker.write_current_ip')
 
-        mocker.patch('ip_checker.send_telegram_message')
         mock_logger = mocker.patch('ip_checker.logger')
 
         check_ip()
