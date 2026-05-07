@@ -1,20 +1,18 @@
-# Use the official Python image from Docker Hub
 FROM python:3.12-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements.txt file to the working directory
 COPY requirements.txt .
-
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files
-COPY *py .
+COPY *.py .
 
-# Expose the port the app runs on
+RUN adduser --disabled-password --no-create-home appuser
+USER appuser
+
 EXPOSE 5000
 
-# Default command
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
+
 CMD ["python", "main.py"]

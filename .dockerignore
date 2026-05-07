@@ -1,0 +1,9 @@
+.git
+.venv
+__pycache__
+*.pyc
+tests/
+app.log
+current_ip.txt
+*.txt
+README.md

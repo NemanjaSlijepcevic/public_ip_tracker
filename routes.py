@@ -1,28 +1,38 @@
 import os
-import logging
-from main import CURRENT_IP
+import ip_checker
+from datetime import datetime, timezone
 from flask import jsonify, request, abort
 
-logger = logging.getLogger(__name__)
 API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
-
-
-def check_api_input():  # UT fails if this is checked without function
-    API_BEARER_TOKEN = os.getenv('API_IP_TOKEN')
-    if not API_BEARER_TOKEN:
-        logger.error("API_BEARER_TOKEN is not set.")
-        exit(1)
-    return True  # unit testing check
 
 
 def setup_routes(app):
     @app.route('/current_ip', methods=['GET'])
     def show_current_ip():
-        auth_header = request.headers.get('Authorization')
-        if auth_header and auth_header.split(" ")[1] == API_BEARER_TOKEN:
-            return jsonify({"ip": CURRENT_IP})
-        else:
-            abort(401)  # Unauthorized
+        auth_header = request.headers.get('Authorization', '')
+        parts = auth_header.split(' ', 1)
+        token_ok = (
+            len(parts) == 2
+            and parts[0] == 'Bearer'
+            and parts[1] == API_BEARER_TOKEN
+        )
+        if not token_ok:
+            abort(401)
+        return jsonify({"ip": ip_checker.get_current_ip_value()})
+
+    @app.route('/health', methods=['GET'])
+    def health():
+        now = datetime.now(timezone.utc)
+        s = ip_checker.state
+        return jsonify({
+            "status": "ok",
+            "uptime_seconds": round((now - s.started_at).total_seconds()),
+            "current_ip": s.current_ip,
+            "last_checked": s.last_checked.isoformat()
+            if s.last_checked else None,
+            "last_changed": s.last_changed.isoformat()
+            if s.last_changed else None,
+        })
 
     @app.errorhandler(401)
     def custom_401(error):

@@ -1,12 +1,17 @@
 import os
 import logging
-from ip_checker import check_bot_inputs
-from routes import check_api_input
 from file_utils import check_and_create_file
 
 
 CURRENT_IP_FILE = os.getenv('IP_FILE_NAME', 'current_ip.txt')
 logger = logging.getLogger(__name__)
+
+
+def check_api_token():
+    if not os.getenv('API_IP_TOKEN'):
+        logger.error("API_IP_TOKEN is not set.")
+        exit(1)
+    return True
 
 
 def check_frequency():
@@ -36,8 +41,7 @@ def check_log_level():
 
 
 def check_inputs():
-    check_bot_inputs()
-    check_api_input()
+    check_api_token()
     check_and_create_file(CURRENT_IP_FILE)
     check_frequency()
     check_log_level()
