@@ -1,13 +1,13 @@
 # Public IP Tracking and Notification App
 
-This application tracks your public IP address and notifies you via Telegram if the IP address changes. It also provides a REST API endpoint to retrieve the current IP address, secured by a bearer token.
+This application tracks your public IP address and provides a REST API endpoint to retrieve the current IP address, secured by a bearer token.
 
 This setup is particularly useful for machines behind Carrier-Grade NAT (CGNAT), where direct access from the internet is not possible due to shared public IPs. By running a VPN on the machine, you can access the API endpoint securely via the VPN connection, even when the machine is behind CGNAT. This allows you to reliably track and retrieve the public IP address of your machine through the VPN without needing a public-facing IP address.
 
 ## Features
 
 - **Public IP Tracking**: Periodically checks your public IP address.
-- **Telegram Notifications**: Sends a Telegram message when your IP changes.
+- ~~**Telegram Notifications**: Sends a Telegram message when your IP changes.~~
 - **REST API**: Provides an API to fetch the current IP address.
 - **Logging**: Logs all actions to both the console and a log file (`app.log`).
 
@@ -24,14 +24,14 @@ This setup is particularly useful for machines behind Carrier-Grade NAT (CGNAT),
 
 The application relies on the following environment variables:
 
-| Variable            | Description                                       |
-|---------------------|---------------------------------------------------|
-| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token (required).               |
-| `TELEGRAM_CHAT_ID`   | The chat ID where the bot sends notifications (required). |
-| `API_IP_TOKEN`       | Bearer token for accessing the `/current_ip` API (required). |
-| `IP_FILE_NAME`       | Name of the file storing the current IP (default: `current_ip.txt`). |
-| `LOG_LEVEL`          | Logging level (default: `INFO`). |
-| `CHECK_FREQUENCY`    | Task execution frequency in sedonds (default: `60`). |
+| Variable                 | Description                                       |
+|--------------------------|---------------------------------------------------|
+| ~~`TELEGRAM_BOT_TOKEN`~~ | ~~Your Telegram bot token (required).~~               |
+| ~~`TELEGRAM_CHAT_ID`~~   | ~~The chat ID where the bot sends notifications (required).~~ |
+| `API_IP_TOKEN`           | Bearer token for accessing the `/current_ip` API (required). |
+| `IP_FILE_NAME`           | Name of the file storing the current IP (default: `current_ip.txt`). |
+| `LOG_LEVEL`              | Logging level (default: `INFO`). |
+| `CHECK_FREQUENCY`        | Task execution frequency in sedonds (default: `60`). |
 
 
 ## Installation
@@ -52,8 +52,6 @@ The application relies on the following environment variables:
 3. Create a `.env` file with the required environment variables:
 
    ~~~env
-   TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-   TELEGRAM_CHAT_ID=your_telegram_chat_id
    API_IP_TOKEN=your_api_token
    ~~~
 
@@ -106,8 +104,6 @@ You can run the application in a Docker container using the provided `Dockerfile
    ~~~bash
    docker run -d \
      --name public_ip_tracker \
-     -e TELEGRAM_BOT_TOKEN="${TELEGRAM_IP_TOKEN}" \
-     -e TELEGRAM_CHAT_ID="${TELEGRAM_IP_ID}" \
      -e API_IP_TOKEN="${API_IP_TOKEN}" \
      -e TZ="Europe/Belgrade" \
      -e LOG_LEVEL="DEBUG" \
@@ -131,8 +127,6 @@ For easier management of Docker containers and environment configuration, you ca
        image: ghcr.io/nemanjaslijepcevic/public_ip_tracker:latest
        container_name: public_ip_tracker
        environment:
-         TELEGRAM_BOT_TOKEN: "${TELEGRAM_IP_TOKEN}"
-         TELEGRAM_CHAT_ID: "${TELEGRAM_IP_ID}"
          API_IP_TOKEN: "${API_IP_TOKEN}"
          TZ: "Europe/Belgrade"
          LOG_LEVEL: "DEBUG"
