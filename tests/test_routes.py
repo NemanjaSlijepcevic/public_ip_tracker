@@ -50,9 +50,9 @@ class TestHealthEndpoint:
         data = response.json
         assert data['status'] == 'ok'
         assert 'uptime_seconds' in data
-        assert 'current_ip' in data
         assert 'last_checked' in data
         assert 'last_changed' in data
+        assert 'current_ip' not in data
 
     def test_health_reflects_state(self, client, mocker):
         now = datetime.now(timezone.utc)
@@ -65,6 +65,5 @@ class TestHealthEndpoint:
         response = client.get('/health')
         assert response.status_code == 200
         data = response.json
-        assert data['current_ip'] == '1.2.3.4'
         assert data['last_checked'] is not None
         assert data['last_changed'] is not None

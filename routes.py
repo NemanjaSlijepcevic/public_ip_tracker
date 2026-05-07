@@ -27,7 +27,6 @@ def setup_routes(app):
         return jsonify({
             "status": "ok",
             "uptime_seconds": round((now - s.started_at).total_seconds()),
-            "current_ip": s.current_ip,
             "last_checked": s.last_checked.isoformat()
             if s.last_checked else None,
             "last_changed": s.last_changed.isoformat()
