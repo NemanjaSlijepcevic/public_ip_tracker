@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY *.py .
 
-RUN adduser -D -H appuser
+RUN adduser -D -H appuser && chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 5000
