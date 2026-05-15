@@ -3,6 +3,7 @@ import logging
 import os
 import threading
 import time
+from waitress import serve
 from config_utils import check_inputs, check_frequency
 from file_utils import check_and_create_file
 from ip_checker import check_ip
@@ -44,4 +45,4 @@ if __name__ == "__main__":
 
     logger.info("Starting public IP tracking app")
     periodic_task()
-    app.run(host='0.0.0.0', port=5000)
+    serve(app, host='0.0.0.0', port=5000)
