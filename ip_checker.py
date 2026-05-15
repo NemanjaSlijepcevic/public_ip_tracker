@@ -7,7 +7,7 @@ from file_utils import read_previous_ip, write_current_ip
 
 
 IP_SOURCES = [
-    'http://ifconfig.me/ip',
+    'https://ifconfig.me/ip',
     'https://api.ipify.org',
     'https://icanhazip.com',
 ]

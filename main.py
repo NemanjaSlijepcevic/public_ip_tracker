@@ -3,11 +3,8 @@ import logging
 import os
 import threading
 import time
-from config_utils import (
-    check_input_values,
-    check_frequency_input_value
-)
-from file_utils import check_file_exists, create_file
+from config_utils import check_inputs, check_frequency
+from file_utils import check_and_create_file
 from ip_checker import check_ip
 from routes import setup_routes
 
@@ -41,11 +38,9 @@ def periodic_task():
 
 if __name__ == "__main__":
 
-    if not check_input_values():
-        logger.info("Undefined input variable")
-    elif not check_file_exists(CURRENT_IP_FILE):
-        create_file(CURRENT_IP_FILE)
-    frequency = check_frequency_input_value()
+    check_inputs()
+    check_and_create_file(CURRENT_IP_FILE)
+    frequency = check_frequency()
 
     logger.info("Starting public IP tracking app")
     periodic_task()
